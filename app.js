@@ -11,7 +11,7 @@ const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser')();
 const logger = require('koa-logger');
 const logUtil = require('./utils/log_util');
-const koastatic = require('koa-static');
+const serve = require('koa-static');
 
 const response_formatter = require('./app/middleware/response_formatter');
 
@@ -20,15 +20,17 @@ const api = require('./routes/api');
 const index = require('./routes/index');
 const users = require('./routes/users');
 
+
+const staticPath = '/public';
+app.use(serve(path.resolve('public')))
+
+
 // middlewares
 app.use(convert(bodyparser));
 app.use(convert(json()));
 app.use(convert(logger()));
 app.use(response_formatter('^/api'));
-const staticPath = '/public';
-app.use(koastatic(
-    path.join(__dirname, staticPath)
-))
+
 
 app.use(views(__dirname + '/views', {
     extension: 'jade'
