@@ -1,6 +1,6 @@
 <template>
     <div id="class">
-        <router-link to="/">ONE</router-link>
+        <router-link to="/">都是</router-link>
         <router-link to="/two">TWO</router-link>
         <router-view></router-view>
     </div>
