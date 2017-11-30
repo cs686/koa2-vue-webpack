@@ -1,5 +1,6 @@
 //noinspection JSUnresolvedFunction
 const Koa = require('koa');
+const path = require('path')
 const app = new Koa();
 const router = require('koa-router')();
 const views = require('koa-views');
@@ -10,6 +11,7 @@ const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser')();
 const logger = require('koa-logger');
 const logUtil = require('./utils/log_util');
+const koastatic = require('koa-static');
 
 const response_formatter = require('./app/middleware/response_formatter');
 
@@ -23,24 +25,14 @@ app.use(convert(bodyparser));
 app.use(convert(json()));
 app.use(convert(logger()));
 app.use(response_formatter('^/api'));
-app.use(convert(require('koa-static')(__dirname + '/public')));
+const staticPath = '/public';
+app.use(koastatic(
+    path.join(__dirname, staticPath)
+))
 
 app.use(views(__dirname + '/views', {
-  extension: 'jade'
+    extension: 'jade'
 }));
-
-// app.use( async(ctx, next)=>{
-//   const start = new Date();
-//   var ms;
-//   try{
-//     await next();
-//     ms = new Date() - start;
-//     logUtil.logResponse(ctx, ms)
-//   } catch (error) {
-//     ms = new Date() - start;
-//     logUtil.logError(ctx, error, ms)
-//   }
-// });
 
 
 router.use('/', index.routes(), index.allowedMethods());
@@ -49,11 +41,5 @@ router.use('/api', api.routes(), api.allowedMethods());
 
 
 app.use(router.routes(), router.allowedMethods());
-
-// response
-// app.on('error', function(err, ctx){
-//   logger.error('server error', err, ctx);
-// });
-
 
 module.exports = app;
