@@ -1,10 +1,7 @@
 const router = require('koa-router')();
+const gm = require('gm')
+const Demo = require('../app/controllers/demo.controller')
 
-router.get('/', function (ctx, next) {
-    ctx.body = {
-        username:'Jim',
-        age:30
-    }
-});
+router.get('/', Demo.user);
 
 module.exports = router;
